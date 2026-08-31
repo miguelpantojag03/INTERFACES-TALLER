@@ -1,37 +1,32 @@
 import type { SectionData } from '../types';
 
-interface SectionSelectorProps {
+interface Props {
   sections: SectionData[];
   activeSection: number;
   onSectionChange: (id: number) => void;
 }
 
-export default function SectionSelector({
-  sections,
-  activeSection,
-  onSectionChange,
-}: SectionSelectorProps) {
+export default function SectionSelector({ sections, activeSection, onSectionChange }: Props) {
   return (
-    <div className="flex items-center gap-2 w-full mb-5 lg:mb-6">
-      {/* Label – desktop only */}
-      <span className="hidden lg:block text-[10px] font-bold tracking-[0.15em] text-gray-400 uppercase mr-1 whitespace-nowrap">
+    <div className="flex items-center gap-3 w-full mb-5">
+      {/* "SECTIONS" micro-label — desktop only */}
+      <span className="hidden lg:block text-[10px] font-bold text-[#9ca3af] tracking-[0.16em] uppercase shrink-0">
         Sections
       </span>
 
       {/* Pills */}
       <div className="flex gap-2 flex-1 lg:flex-none">
-        {sections.map((sec) => (
+        {sections.map(sec => (
           <button
             key={sec.id}
             onClick={() => onSectionChange(sec.id)}
             aria-pressed={activeSection === sec.id}
             className={`
-              flex-1 lg:flex-none lg:w-14 h-10 rounded-full text-sm font-semibold
+              flex-1 lg:flex-none lg:w-[52px] h-10 rounded-full text-sm font-semibold
               transition-all duration-200 active:scale-95
-              ${
-                activeSection === sec.id
-                  ? 'bg-gray-950 text-white shadow-md'
-                  : 'bg-white text-gray-500 border border-gray-200 hover:border-gray-300 hover:text-gray-700'
+              ${activeSection === sec.id
+                ? 'bg-[#111] text-white'
+                : 'bg-[#f0f0f0] text-[#6b7280] hover:bg-[#e5e5e5]'
               }
             `}
           >
@@ -40,21 +35,25 @@ export default function SectionSelector({
         ))}
       </div>
 
-      {/* Legend – desktop only (right side) */}
+      {/* Legend — desktop right */}
       <div className="hidden lg:flex items-center gap-4 ml-auto">
-        <LegendItem color="bg-[#e2e5ea]" label="Available" />
-        <LegendItem color="bg-[#b8bcc6]" label="Occupied" />
-        <LegendItem color="bg-[#6c47ff]" label="Your selection" />
+        <LegendDot color="#d1d5db" label="Disponible" />
+        <LegendDot color="#9ca3af" label="Ocupado" />
+        <LegendDot color="#6c47ff" label="Tu selección" round />
       </div>
     </div>
   );
 }
 
-function LegendItem({ color, label }: { color: string; label: string }) {
+function LegendDot({ color, label, round }: { color: string; label: string; round?: boolean }) {
   return (
     <div className="flex items-center gap-1.5">
-      <div className={`w-3.5 h-3.5 rounded-sm ${color}`} aria-hidden="true" />
-      <span className="text-xs text-gray-500 font-medium">{label}</span>
+      <div
+        className={round ? 'w-2.5 h-2.5 rounded-full' : 'w-2.5 h-2.5 rounded-sm'}
+        style={{ background: color }}
+        aria-hidden="true"
+      />
+      <span className="text-[11px] text-[#9ca3af] font-medium">{label}</span>
     </div>
   );
 }

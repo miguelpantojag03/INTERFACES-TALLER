@@ -5,57 +5,69 @@ interface SeatProps {
   onToggle: (seat: SeatType) => void;
 }
 
-const statusStyles: Record<SeatType['status'], string> = {
-  available:
-    'bg-[#e2e5ea] hover:bg-[#d0d4db] text-gray-500 cursor-pointer border border-transparent hover:border-gray-300',
-  occupied:
-    'bg-[#c8ccd4] text-gray-400 cursor-not-allowed border border-transparent opacity-70',
-  selected:
-    'bg-[#6c47ff] hover:bg-[#5c39e0] text-white cursor-pointer border border-[#5535d4] shadow-md shadow-[#6c47ff]/30',
-};
+/* Exact colors from image */
+const AVAILABLE = { bg: '#e2e5ec', text: '#9ca3af' };
+const OCCUPIED  = { bg: '#c8cbd4', text: '#b0b3bc' };
+const SELECTED  = { bg: '#6c47ff', text: '#ffffff' };
 
 export default function Seat({ seat, onToggle }: SeatProps) {
   const isOccupied = seat.status === 'occupied';
   const isSelected = seat.status === 'selected';
-
-  const handleClick = () => {
-    if (!isOccupied) onToggle(seat);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if ((e.key === 'Enter' || e.key === ' ') && !isOccupied) {
-      e.preventDefault();
-      onToggle(seat);
-    }
-  };
+  const c = isSelected ? SELECTED : isOccupied ? OCCUPIED : AVAILABLE;
 
   return (
     <button
       type="button"
       disabled={isOccupied}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      aria-label={`Seat ${seat.id}, ${seat.status}`}
+      onClick={() => { if (!isOccupied) onToggle(seat); }}
+      onKeyDown={e => {
+        if ((e.key === 'Enter' || e.key === ' ') && !isOccupied) {
+          e.preventDefault();
+          onToggle(seat);
+        }
+      }}
+      aria-label={`Seat ${seat.id}, ${isOccupied ? 'unavailable' : isSelected ? 'selected' : 'available'}`}
       aria-pressed={isSelected}
       aria-disabled={isOccupied}
-      className={`
-        relative flex items-center justify-center
-        w-8 h-8 lg:w-8 lg:h-8
-        rounded-xl text-[10px] font-bold
-        transition-all duration-150 select-none touch-manipulation
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6c47ff] focus-visible:ring-offset-1
-        active:scale-95
-        ${statusStyles[seat.status]}
-      `}
+      style={{
+        width: '30px',
+        height: '30px',
+        borderRadius: '8px',
+        background: c.bg,
+        color: c.text,
+        fontSize: '8px',
+        fontWeight: 700,
+        border: isSelected ? '1.5px solid #5535d4' : 'none',
+        boxShadow: isSelected ? '0 2px 8px rgba(108,71,255,0.35)' : 'none',
+        cursor: isOccupied ? 'not-allowed' : 'pointer',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        paddingBottom: '4px',
+        position: 'relative',
+        transition: 'all 0.12s',
+        outline: 'none',
+        flexShrink: 0,
+        userSelect: 'none',
+      }}
+      className="focus-visible:ring-2 focus-visible:ring-[#6c47ff] focus-visible:ring-offset-1 active:scale-90 touch-manipulation"
     >
-      {/* Seat back detail */}
+      {/* Headrest notch at top */}
       <span
-        className={`absolute top-1 left-1/2 -translate-x-1/2 w-4 h-1 rounded-full opacity-30 ${
-          isSelected ? 'bg-white' : 'bg-gray-600'
-        }`}
         aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: '5px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '12px',
+          height: '3px',
+          borderRadius: '99px',
+          background: isSelected ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.08)',
+        }}
       />
-      <span className="mt-1 leading-none">{seat.id}</span>
+      {seat.id}
     </button>
   );
 }

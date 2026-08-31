@@ -4,148 +4,166 @@ interface AircraftMapProps {
   activeSection: number;
 }
 
-export default function AircraftMap({ activeSection }: AircraftMapProps) {
-  const sectionPositions = [
-    { id: 1, left: '8%',  width: '22%' },
-    { id: 2, left: '32%', width: '22%' },
-    { id: 3, left: '56%', width: '30%' },
-  ];
+/* Sections: left%, width% of the fuselage bar */
+const SECTIONS = [
+  { id: 1, label: 'BUSINESS', left: 7,  width: 23 },
+  { id: 2, label: 'PREMIUM',  left: 31, width: 21 },
+  { id: 3, label: 'ECONOMY',  left: 54, width: 33 },
+];
 
-  const sectionLabels: Record<number, string> = {
-    1: 'BUSINESS',
-    2: 'PREMIUM',
-    3: 'ECONOMY',
-  };
+export default function AircraftMap({ activeSection }: AircraftMapProps) {
+  const active = SECTIONS.find(s => s.id === activeSection)!;
 
   return (
     <div
-      className="relative w-full rounded-2xl lg:rounded-3xl bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200/60 overflow-hidden mb-4 lg:mb-5"
-      style={{ minHeight: '100px' }}
+      className="relative w-full rounded-2xl lg:rounded-3xl mb-5 overflow-hidden"
+      style={{
+        background: 'linear-gradient(160deg, #f7f7f8 0%, #e8e8ea 100%)',
+        minHeight: '130px',
+      }}
     >
-      {/* Desktop left controls */}
-      <div className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 flex-col gap-2.5 z-10">
+      {/* Left control buttons (desktop only) */}
+      <div className="hidden lg:flex absolute left-5 top-1/2 -translate-y-1/2 flex-col gap-2.5 z-10">
         <button
-          className="w-9 h-9 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm hover:bg-gray-50 transition-colors"
+          className="w-9 h-9 rounded-full bg-white border border-gray-200 shadow-sm
+                     flex items-center justify-center hover:bg-gray-50 transition-colors"
           aria-label="Diamond view"
         >
-          <Diamond size={14} className="text-gray-500" />
+          <Diamond size={13} className="text-gray-500" strokeWidth={1.5} />
         </button>
         <button
-          className="w-9 h-9 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm hover:bg-gray-50 transition-colors"
+          className="w-9 h-9 rounded-full bg-white border border-gray-200 shadow-sm
+                     flex items-center justify-center hover:bg-gray-50 transition-colors"
           aria-label="Anchor view"
         >
-          <Anchor size={14} className="text-gray-500" />
+          <Anchor size={13} className="text-gray-500" strokeWidth={1.5} />
         </button>
       </div>
 
-      {/* Aircraft body */}
-      <div className="flex items-center justify-center w-full h-full py-5 lg:py-8 px-12 lg:px-20">
+      {/* Aircraft body container */}
+      <div className="flex items-center justify-center h-full py-6 lg:py-8 px-14 lg:px-24">
         <div className="relative w-full" style={{ maxWidth: '580px' }}>
 
-          {/* Fuselage */}
-          <div className="relative flex items-center">
-
-            {/* Nose */}
+          {/* BUSINESS/PREMIUM/ECONOMY label pill above active section — desktop only */}
+          <div
+            className="hidden lg:block absolute pointer-events-none"
+            style={{
+              left: `${active.left + active.width / 2}%`,
+              transform: 'translateX(-50%)',
+              top: '-22px',
+            }}
+          >
             <div
-              className="flex-shrink-0 h-9 lg:h-12 bg-white border border-gray-300/60 shadow-sm"
+              className="bg-[#111] text-white rounded-full px-3 py-[3px] whitespace-nowrap"
+              style={{ fontSize: '8px', fontWeight: 800, letterSpacing: '0.18em' }}
+            >
+              {active.label}
+            </div>
+          </div>
+
+          {/* ── Fuselage ── */}
+          <div className="relative flex items-stretch" style={{ height: '44px' }}>
+
+            {/* Nose cap */}
+            <div
+              className="shrink-0 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
               style={{
-                width: 'clamp(2.5rem, 8vw, 5rem)',
+                width: 'clamp(52px, 10vw, 76px)',
                 borderRadius: '50% 0 0 50%',
+                border: '1px solid rgba(200,200,205,0.7)',
                 borderRight: 'none',
               }}
               aria-hidden="true"
             />
 
-            {/* Main fuselage */}
-            <div className="relative flex-1 h-9 lg:h-12 bg-white border-t border-b border-gray-300/60 shadow-sm overflow-visible">
-
-              {/* Section label above fuselage – desktop only */}
-              <div className="hidden lg:block absolute -top-7 left-0 right-0">
-                {sectionPositions.map(
-                  (sec) =>
-                    sec.id === activeSection && (
-                      <div
-                        key={sec.id}
-                        className="absolute -translate-x-1/2 bg-gray-950 text-white text-[9px] font-bold tracking-widest px-2.5 py-0.5 rounded-full"
-                        style={{ left: `calc(${sec.left} + ${sec.width} / 2)` }}
-                      >
-                        {sectionLabels[sec.id]}
-                      </div>
-                    )
-                )}
-              </div>
-
+            {/* Main body */}
+            <div
+              className="relative flex-1 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+              style={{ borderTop: '1px solid rgba(200,200,205,0.7)', borderBottom: '1px solid rgba(200,200,205,0.7)' }}
+              aria-hidden="true"
+            >
               {/* Section highlight boxes */}
-              {sectionPositions.map((sec) => (
+              {SECTIONS.map(sec => (
                 <div
                   key={sec.id}
-                  className={`absolute top-0.5 bottom-0.5 rounded-md transition-all duration-300 ${
-                    sec.id === activeSection
-                      ? 'border-2 border-gray-800 bg-gray-100/80'
-                      : 'border border-gray-200 bg-transparent'
-                  }`}
-                  style={{ left: sec.left, width: sec.width }}
-                  aria-hidden="true"
+                  className="absolute top-[3px] bottom-[3px] rounded-lg transition-all duration-300"
+                  style={{
+                    left: `${sec.left}%`,
+                    width: `${sec.width}%`,
+                    border: sec.id === activeSection
+                      ? '2px solid #1a1a1a'
+                      : '1px solid rgba(180,180,185,0.5)',
+                    background: sec.id === activeSection ? 'rgba(220,220,225,0.4)' : 'transparent',
+                  }}
                 />
               ))}
 
               {/* Seat dots */}
-              <div
-                className="absolute inset-0 flex items-center px-2 gap-px"
-                aria-hidden="true"
-              >
-                {Array.from({ length: 36 }).map((_, i) => (
+              <div className="absolute inset-0 flex items-center px-2 gap-[2px]">
+                {Array.from({ length: 38 }).map((_, i) => (
                   <div
                     key={i}
-                    className={`flex-1 h-1.5 rounded-full ${
-                      i < 8
-                        ? 'bg-[#6c47ff]/60'
+                    className="flex-1 rounded-full"
+                    style={{
+                      height: i < 8 ? '5px' : '3px',
+                      background: i < 8
+                        ? 'rgba(108,71,255,0.55)'
                         : i < 16
-                        ? 'bg-gray-400/60'
-                        : 'bg-gray-300/60'
-                    }`}
+                        ? 'rgba(130,130,140,0.45)'
+                        : 'rgba(180,180,188,0.35)',
+                    }}
                   />
                 ))}
               </div>
             </div>
 
-            {/* Tail */}
+            {/* Tail cap */}
             <div
-              className="flex-shrink-0 h-9 lg:h-12 bg-white border border-gray-300/60 shadow-sm"
+              className="shrink-0 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
               style={{
-                width: 'clamp(2rem, 5vw, 3rem)',
-                borderRadius: '0 30% 30% 0',
+                width: 'clamp(28px, 5vw, 42px)',
+                borderRadius: '0 35% 35% 0',
+                border: '1px solid rgba(200,200,205,0.7)',
                 borderLeft: 'none',
               }}
               aria-hidden="true"
             />
           </div>
 
-          {/* Wings — percentage based, no fixed px that overflow small screens */}
+          {/* Wings */}
           <div
-            className="absolute top-1/2 -translate-y-1/2 pointer-events-none"
-            style={{ left: '28%', width: '22%' }}
+            className="absolute pointer-events-none"
+            style={{ left: '24%', width: '23%', top: 0, height: '44px' }}
             aria-hidden="true"
           >
             {/* Upper wing */}
             <div
-              className="absolute w-full bg-white/80 border border-gray-300/50"
               style={{
-                height: 'clamp(16px, 3.5vw, 28px)',
-                top: 'calc(-1 * clamp(22px, 5vw, 36px))',
-                clipPath: 'polygon(20% 100%, 100% 100%, 60% 0%, 0% 0%)',
+                position: 'absolute',
+                width: '100%',
+                height: 'clamp(18px, 4vw, 28px)',
+                bottom: '100%',
+                marginBottom: '-3px',
+                background: 'rgba(255,255,255,0.8)',
+                border: '1px solid rgba(190,190,195,0.5)',
+                clipPath: 'polygon(18% 100%, 100% 100%, 62% 0%, 3% 0%)',
               }}
             />
             {/* Lower wing */}
             <div
-              className="absolute w-full bg-white/80 border border-gray-300/50"
               style={{
-                height: 'clamp(16px, 3.5vw, 28px)',
-                top: 'calc(clamp(12px, 3vw, 20px))',
-                clipPath: 'polygon(0% 0%, 60% 100%, 100% 0%, 20% 0%)',
+                position: 'absolute',
+                width: '100%',
+                height: 'clamp(18px, 4vw, 28px)',
+                top: '100%',
+                marginTop: '-3px',
+                background: 'rgba(255,255,255,0.8)',
+                border: '1px solid rgba(190,190,195,0.5)',
+                clipPath: 'polygon(3% 0%, 62% 100%, 100% 0%, 18% 0%)',
               }}
             />
           </div>
+
         </div>
       </div>
     </div>
