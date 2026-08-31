@@ -2,74 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Base resets ────────────────────────────────────────────────────── */
-*, *::before, *::after {
-  box-sizing: border-box;
-}
+*, *::before, *::after { box-sizing: border-box; }
 
 html {
   -webkit-text-size-adjust: 100%;
-  font-size: 16px;
 }
 
 body {
   margin: 0;
-  font-family: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f4f4f6;
-  /* Prevent horizontal scroll on mobile */
+  background: #e8e8ea;
   overflow-x: hidden;
-  /* Ensure full-height on iOS */
   min-height: 100dvh;
 }
 
-/* ── Scrollbar styling ──────────────────────────────────────────────── */
-::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 99px;
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 99px; }
+
+button { -webkit-tap-highlight-color: transparent; }
+
+/* Diagonal stripe pattern reused by multiple cards */
+.stripe-bg {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(0,0,0,0.035) 0px,
+    rgba(0,0,0,0.035) 1px,
+    transparent 1px,
+    transparent 18px
+  );
 }
 
-/* ── Safe area support ──────────────────────────────────────────────── */
-.pb-safe {
-  padding-bottom: env(safe-area-inset-bottom, 1.25rem);
-}
-
-/* ── Focus rings ────────────────────────────────────────────────────── */
-:focus-visible {
-  outline: 2px solid #6c47ff;
-  outline-offset: 2px;
-}
-
-/* Remove default button styles */
-button {
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* ── Animations ─────────────────────────────────────────────────────── */
-@keyframes seat-pop {
-  0%   { transform: scale(1); }
-  40%  { transform: scale(0.88); }
-  70%  { transform: scale(1.08); }
-  100% { transform: scale(1); }
-}
-
-.seat-pop {
-  animation: seat-pop 200ms ease-out;
-}
-
-@keyframes slide-up {
-  from { transform: translateY(10px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
-}
-
-.slide-up {
-  animation: slide-up 200ms ease-out;
+.stripe-bg-dark {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(255,255,255,0.045) 0px,
+    rgba(255,255,255,0.045) 1px,
+    transparent 1px,
+    transparent 18px
+  );
 }

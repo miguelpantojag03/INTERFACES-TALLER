@@ -8,6 +8,8 @@ interface SeatMapProps {
 
 const COLS_LEFT  = ['A', 'B', 'C'];
 const COLS_RIGHT = ['D', 'E', 'F'];
+const GAP = 4;    // px between seats
+const SEAT_W = 30; // px seat width
 
 export default function SeatMap({ section, onToggleSeat }: SeatMapProps) {
   const rows = Array.from(new Set(section.seats.map(s => s.row))).sort((a, b) => a - b);
@@ -15,72 +17,65 @@ export default function SeatMap({ section, onToggleSeat }: SeatMapProps) {
     section.seats.find(s => s.row === row && s.column === col);
 
   return (
-    <div className="w-full">
-      {/* Section info header */}
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-[13px] font-bold text-[#111]">{section.name}</span>
-        <span className="text-[11px] text-[#9ca3af] font-medium whitespace-nowrap">
+    <div style={{ width: '100%' }}>
+
+      {/* Section header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+        <span style={{ fontSize: '13px', fontWeight: 700, color: '#111' }}>
+          {section.name}
+        </span>
+        <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 500, whiteSpace: 'nowrap' }}>
           {section.freeSeats} libres &nbsp;·&nbsp; ${section.price} / asiento
         </span>
       </div>
 
       {/* Column labels */}
-      <div className="flex items-center mb-1.5" style={{ paddingLeft: '24px' }} aria-hidden="true">
-        {/* Left group A B C */}
-        {COLS_LEFT.map(col => (
-          <div key={col} style={{ width: '30px', marginRight: '4px' }}
-               className="text-center text-[10px] font-semibold text-[#9ca3af]">
+      <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '22px', marginBottom: '6px' }} aria-hidden="true">
+        {COLS_LEFT.map((col, i) => (
+          <div key={col} style={{ width: `${SEAT_W}px`, marginRight: i < COLS_LEFT.length - 1 ? `${GAP}px` : 0, textAlign: 'center', fontSize: '10px', fontWeight: 600, color: '#9ca3af' }}>
             {col}
           </div>
         ))}
         {/* Aisle gap */}
-        <div style={{ width: '24px' }} />
-        {/* Right group D E F */}
-        {COLS_RIGHT.map(col => (
-          <div key={col} style={{ width: '30px', marginRight: '4px' }}
-               className="text-center text-[10px] font-semibold text-[#9ca3af]">
+        <div style={{ width: '20px' }} />
+        {COLS_RIGHT.map((col, i) => (
+          <div key={col} style={{ width: `${SEAT_W}px`, marginRight: i < COLS_RIGHT.length - 1 ? `${GAP}px` : 0, textAlign: 'center', fontSize: '10px', fontWeight: 600, color: '#9ca3af' }}>
             {col}
           </div>
         ))}
       </div>
 
-      {/* Seat grid */}
+      {/* Rows */}
       <div
-        className="flex flex-col"
-        style={{ gap: '4px' }}
+        style={{ display: 'flex', flexDirection: 'column', gap: `${GAP}px` }}
         role="group"
         aria-label={`${section.name} seat map`}
       >
         {rows.map(row => (
-          <div key={row} className="flex items-center">
+          <div key={row} style={{ display: 'flex', alignItems: 'center' }}>
             {/* Row number */}
-            <div
-              className="text-right text-[10px] font-semibold text-[#9ca3af] shrink-0"
-              style={{ width: '20px', paddingRight: '4px' }}
-            >
+            <div style={{ width: '18px', fontSize: '9px', fontWeight: 600, color: '#9ca3af', textAlign: 'right', paddingRight: '4px', flexShrink: 0 }}>
               {row}
             </div>
 
             {/* A B C */}
-            <div className="flex" style={{ gap: '4px' }}>
+            <div style={{ display: 'flex', gap: `${GAP}px` }}>
               {COLS_LEFT.map(col => {
-                const seat = getSeat(row, col);
-                return seat
-                  ? <Seat key={seat.id} seat={seat} onToggle={onToggleSeat} />
-                  : <div key={col} style={{ width: '30px', height: '30px' }} />;
+                const s = getSeat(row, col);
+                return s ? <Seat key={s.id} seat={s} onToggle={onToggleSeat} />
+                         : <div key={col} style={{ width: `${SEAT_W}px`, height: `${SEAT_W}px` }} />;
               })}
             </div>
 
             {/* Aisle */}
-            <div style={{ width: '24px' }} aria-hidden="true" />
+            <div style={{ width: '20px', flexShrink: 0 }} aria-hidden="true" />
 
             {/* D E F */}
-            <div className="flex" style={{ gap: '4px' }}>
+            <div style={{ display: 'flex', gap: `${GAP}px` }}>
               {COLS_RIGHT.map(col => {
-                const seat = getSeat(row, col);
-                return seat
-                  ? <Seat key={seat.id} seat={seat} onToggle={onToggleSeat} />
-                  : <div key={col} style={{ width: '30px', height: '30px' }} />;
+                const s = getSeat(row, col);
+                return s ? <Seat key={s.id} seat={s} onToggle={onToggleSeat} />
+                         : <div key={col} style={{ width: `${SEAT_W}px`, height: `${SEAT_W}px` }} />;
               })}
             </div>
           </div>

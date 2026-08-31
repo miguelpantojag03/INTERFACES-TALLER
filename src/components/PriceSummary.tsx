@@ -10,41 +10,52 @@ interface Props {
 
 export default function PriceSummary({ selectedSeats, totalPrice, onRemoveSeat, onConfirm }: Props) {
   const count = selectedSeats.length;
-
   return (
-    <div className="hidden lg:flex items-center justify-between gap-4 mt-5 pt-4"
-         style={{ borderTop: '1px solid #f0f0f0' }}>
-
-      {/* Left: seat chips */}
-      <div className="flex-1 min-w-0 flex items-center flex-wrap gap-2">
+    /* Desktop only — hidden on mobile */
+    <div className="hidden lg:flex" style={{
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: '16px',
+      marginTop: '20px',
+      paddingTop: '16px',
+      borderTop: '1px solid #f0f0f2',
+    }}>
+      {/* Chips */}
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
         <SelectedSeats seats={selectedSeats} onRemove={onRemoveSeat} />
       </div>
 
-      {/* Right: TOTAL + price + button */}
-      <div className="flex items-center gap-5 shrink-0">
-        <div className="text-right">
-          <p className="text-[9px] font-extrabold tracking-[0.2em] text-[#9ca3af] uppercase mb-0.5">
+      {/* TOTAL + price + button */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexShrink: 0 }}>
+        <div style={{ textAlign: 'right' }}>
+          <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em', color: '#9ca3af', textTransform: 'uppercase', marginBottom: '2px' }}>
             Total
-          </p>
-          <p className="text-[1.7rem] font-black text-[#0a0a0a] leading-none tabular-nums">
+          </div>
+          <div style={{ fontSize: '1.65rem', fontWeight: 800, color: '#0a0a0a', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
             ${totalPrice.toLocaleString('en-US')}
-          </p>
+          </div>
         </div>
 
         <button
           onClick={onConfirm}
           disabled={count === 0}
-          className="rounded-full text-[13px] font-bold transition-all duration-150 active:scale-95 whitespace-nowrap"
+          className="active:scale-95"
           style={{
             height: '44px',
-            paddingLeft: '28px',
-            paddingRight: '28px',
+            paddingLeft: '26px',
+            paddingRight: '26px',
+            borderRadius: '999px',
+            border: 'none',
+            cursor: count > 0 ? 'pointer' : 'not-allowed',
+            fontSize: '13px',
+            fontWeight: 700,
             background: count > 0 ? '#c8ff00' : '#f0f0f0',
             color: count > 0 ? '#0a0a0a' : '#9ca3af',
-            cursor: count > 0 ? 'pointer' : 'not-allowed',
-            boxShadow: count > 0 ? '0 4px 20px rgba(200,255,0,0.3)' : 'none',
+            boxShadow: count > 0 ? '0 4px 18px rgba(200,255,0,0.35)' : 'none',
+            transition: 'all 0.15s',
+            whiteSpace: 'nowrap',
           }}
-          aria-label={`Confirm ${count} seat${count !== 1 ? 's' : ''}`}
+          aria-label={`Confirmar ${count} asiento${count !== 1 ? 's' : ''}`}
         >
           {count > 0 ? `Confirmar (${count})` : 'Confirmar'}
         </button>

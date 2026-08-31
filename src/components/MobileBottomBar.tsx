@@ -12,73 +12,63 @@ interface Props {
 const MobileBottomBar = forwardRef<HTMLDivElement, Props>(
   ({ selectedSeats, totalPrice, onRemoveSeat, onConfirm }, ref) => {
     const count = selectedSeats.length;
-
     return (
-      <div
-        ref={ref}
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-50"
-        style={{
-          background: '#111111',
-          borderRadius: '24px 24px 0 0',
-          padding: '14px 20px',
-          paddingBottom: 'max(20px, env(safe-area-inset-bottom))',
-        }}
-      >
-        {/* Drag handle */}
-        <div className="flex justify-center mb-3" aria-hidden="true">
-          <div style={{ width: '36px', height: '3px', borderRadius: '99px', background: '#2e2e2e' }} />
+      <div ref={ref} className="lg:hidden" style={{
+        position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50,
+        background: '#111111',
+        borderRadius: '22px 22px 0 0',
+        padding: '12px 20px',
+        paddingBottom: 'max(20px, env(safe-area-inset-bottom))',
+      }}>
+        {/* Handle */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px' }}>
+          <div style={{ width: '34px', height: '3px', borderRadius: '99px', background: '#2e2e2e' }} aria-hidden="true" />
         </div>
 
         {/* Chips */}
         {count > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4" role="list" aria-label="Selected seats">
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }} role="list" aria-label="Selected seats">
             {selectedSeats.map(seat => (
-              <div
-                key={seat.id}
-                role="listitem"
-                className="flex items-center gap-1.5 rounded-full pl-3 pr-1.5 py-1.5"
-                style={{ background: '#2a2a2a', border: '1px solid #383838' }}
-              >
-                <span className="text-[11px] font-bold text-white tracking-wide">{seat.id}</span>
-                <button
-                  onClick={() => onRemoveSeat(seat)}
-                  className="w-[14px] h-[14px] rounded-full flex items-center justify-center touch-manipulation"
-                  style={{ background: 'rgba(255,255,255,0.15)' }}
-                  aria-label={`Remove seat ${seat.id}`}
-                >
-                  <X size={8} strokeWidth={3} className="text-white" />
+              <div key={seat.id} role="listitem" style={{
+                display: 'flex', alignItems: 'center', gap: '6px',
+                background: '#2a2a2a', border: '1px solid #383838', borderRadius: '999px',
+                paddingLeft: '12px', paddingRight: '6px', paddingTop: '6px', paddingBottom: '6px',
+              }}>
+                <span style={{ fontSize: '11px', fontWeight: 700, color: '#fff' }}>{seat.id}</span>
+                <button onClick={() => onRemoveSeat(seat)} aria-label={`Remove seat ${seat.id}`} style={{
+                  width: '16px', height: '16px', borderRadius: '50%',
+                  background: 'rgba(255,255,255,0.15)', border: 'none', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0,
+                }}>
+                  <X size={8} strokeWidth={3} color="#fff" />
                 </button>
               </div>
             ))}
           </div>
         )}
 
-        {/* Price + confirm */}
-        <div className="flex items-center justify-between gap-4">
+        {/* Price row */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
           <div>
-            <p className="text-[9px] font-extrabold tracking-[0.2em] uppercase mb-0.5"
-               style={{ color: '#4b5563' }}>
-              Total
-            </p>
-            <p className="text-[1.75rem] font-black text-white leading-none tabular-nums">
+            <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em', color: '#4b5563', textTransform: 'uppercase', marginBottom: '2px' }}>Total</div>
+            <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#fff', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
               ${totalPrice.toLocaleString('en-US')}
-            </p>
+            </div>
           </div>
-
           <button
             onClick={onConfirm}
             disabled={count === 0}
-            className="rounded-full text-[13px] font-bold transition-all duration-150 active:scale-95 touch-manipulation whitespace-nowrap"
+            className="active:scale-95 touch-manipulation"
             style={{
-              height: '52px',
-              paddingLeft: '28px',
-              paddingRight: '28px',
+              height: '52px', paddingLeft: '28px', paddingRight: '28px',
+              borderRadius: '999px', border: 'none', cursor: count > 0 ? 'pointer' : 'not-allowed',
+              fontSize: '13px', fontWeight: 700,
               background: count > 0 ? '#c8ff00' : '#222',
               color: count > 0 ? '#0a0a0a' : '#4b5563',
-              cursor: count > 0 ? 'pointer' : 'not-allowed',
-              boxShadow: count > 0 ? '0 4px 20px rgba(200,255,0,0.2)' : 'none',
+              boxShadow: count > 0 ? '0 4px 18px rgba(200,255,0,0.2)' : 'none',
+              transition: 'all 0.15s', whiteSpace: 'nowrap',
             }}
-            aria-label={`Confirm ${count} seat${count !== 1 ? 's' : ''}`}
+            aria-label={`Confirmar ${count} asiento${count !== 1 ? 's' : ''}`}
           >
             {count > 0 ? `Confirmar (${count})` : 'Confirmar'}
           </button>
@@ -87,6 +77,5 @@ const MobileBottomBar = forwardRef<HTMLDivElement, Props>(
     );
   }
 );
-
 MobileBottomBar.displayName = 'MobileBottomBar';
 export default MobileBottomBar;

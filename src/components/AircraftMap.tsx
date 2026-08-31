@@ -1,167 +1,156 @@
 import { Diamond, Anchor } from 'lucide-react';
 
-interface AircraftMapProps {
-  activeSection: number;
-}
+interface AircraftMapProps { activeSection: number; }
 
-/* Sections: left%, width% of the fuselage bar */
 const SECTIONS = [
-  { id: 1, label: 'BUSINESS', left: 7,  width: 23 },
-  { id: 2, label: 'PREMIUM',  left: 31, width: 21 },
-  { id: 3, label: 'ECONOMY',  left: 54, width: 33 },
+  { id: 1, label: 'BUSINESS', leftPct: 10, widthPct: 24 },
+  { id: 2, label: 'PREMIUM',  leftPct: 36, widthPct: 20 },
+  { id: 3, label: 'ECONOMY',  leftPct: 58, widthPct: 30 },
 ];
 
 export default function AircraftMap({ activeSection }: AircraftMapProps) {
   const active = SECTIONS.find(s => s.id === activeSection)!;
+  const midPct = active.leftPct + active.widthPct / 2;
 
   return (
-    <div
-      className="relative w-full rounded-2xl lg:rounded-3xl mb-5 overflow-hidden"
-      style={{
-        background: 'linear-gradient(160deg, #f7f7f8 0%, #e8e8ea 100%)',
-        minHeight: '130px',
-      }}
-    >
-      {/* Left control buttons (desktop only) */}
-      <div className="hidden lg:flex absolute left-5 top-1/2 -translate-y-1/2 flex-col gap-2.5 z-10">
-        <button
-          className="w-9 h-9 rounded-full bg-white border border-gray-200 shadow-sm
-                     flex items-center justify-center hover:bg-gray-50 transition-colors"
-          aria-label="Diamond view"
-        >
-          <Diamond size={13} className="text-gray-500" strokeWidth={1.5} />
+    <div style={{
+      position: 'relative',
+      width: '100%',
+      borderRadius: '20px',
+      background: 'linear-gradient(150deg,#f6f6f8 0%,#e9e9ec 100%)',
+      overflow: 'hidden',
+      marginBottom: '20px',
+      minHeight: '145px',
+    }}>
+      {/* Desktop left control buttons */}
+      <div className="hidden lg:flex" style={{ position: 'absolute', left: '18px', top: '50%', transform: 'translateY(-50%)', flexDirection: 'column', gap: '10px', zIndex: 10 }}>
+        <button style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#fff', border: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }} aria-label="Diamond view">
+          <Diamond size={13} color="#9ca3af" strokeWidth={1.5} />
         </button>
-        <button
-          className="w-9 h-9 rounded-full bg-white border border-gray-200 shadow-sm
-                     flex items-center justify-center hover:bg-gray-50 transition-colors"
-          aria-label="Anchor view"
-        >
-          <Anchor size={13} className="text-gray-500" strokeWidth={1.5} />
+        <button style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#fff', border: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }} aria-label="Anchor view">
+          <Anchor size={13} color="#9ca3af" strokeWidth={1.5} />
         </button>
       </div>
 
-      {/* Aircraft body container */}
-      <div className="flex items-center justify-center h-full py-6 lg:py-8 px-14 lg:px-24">
-        <div className="relative w-full" style={{ maxWidth: '580px' }}>
+      {/* Aircraft visualisation */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '28px 80px 28px 70px' }}>
+        <div style={{ position: 'relative', width: '100%', maxWidth: '560px' }}>
 
-          {/* BUSINESS/PREMIUM/ECONOMY label pill above active section — desktop only */}
+          {/* Active section label pill — above fuselage */}
           <div
-            className="hidden lg:block absolute pointer-events-none"
+            className="hidden lg:flex"
             style={{
-              left: `${active.left + active.width / 2}%`,
+              position: 'absolute',
+              left: `${midPct}%`,
               transform: 'translateX(-50%)',
               top: '-22px',
+              justifyContent: 'center',
             }}
           >
-            <div
-              className="bg-[#111] text-white rounded-full px-3 py-[3px] whitespace-nowrap"
-              style={{ fontSize: '8px', fontWeight: 800, letterSpacing: '0.18em' }}
-            >
+            <div style={{
+              background: '#111',
+              color: '#fff',
+              fontSize: '8px',
+              fontWeight: 800,
+              letterSpacing: '0.16em',
+              padding: '3px 10px',
+              borderRadius: '999px',
+              whiteSpace: 'nowrap',
+            }}>
               {active.label}
             </div>
           </div>
 
           {/* ── Fuselage ── */}
-          <div className="relative flex items-stretch" style={{ height: '44px' }}>
+          <div style={{ display: 'flex', alignItems: 'stretch', height: '48px', position: 'relative' }}>
 
-            {/* Nose cap */}
-            <div
-              className="shrink-0 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
-              style={{
-                width: 'clamp(52px, 10vw, 76px)',
-                borderRadius: '50% 0 0 50%',
-                border: '1px solid rgba(200,200,205,0.7)',
-                borderRight: 'none',
-              }}
-              aria-hidden="true"
-            />
+            {/* Nose */}
+            <div style={{
+              flexShrink: 0,
+              width: 'clamp(56px,10vw,80px)',
+              background: '#fff',
+              borderRadius: '50% 0 0 50%',
+              border: '1px solid rgba(210,210,215,0.8)',
+              borderRight: 'none',
+              boxShadow: '2px 0 8px rgba(0,0,0,0.04)',
+            }} aria-hidden="true" />
 
-            {/* Main body */}
-            <div
-              className="relative flex-1 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
-              style={{ borderTop: '1px solid rgba(200,200,205,0.7)', borderBottom: '1px solid rgba(200,200,205,0.7)' }}
-              aria-hidden="true"
-            >
-              {/* Section highlight boxes */}
+            {/* Body */}
+            <div style={{
+              flex: 1,
+              background: '#fff',
+              borderTop: '1px solid rgba(210,210,215,0.8)',
+              borderBottom: '1px solid rgba(210,210,215,0.8)',
+              position: 'relative',
+              overflow: 'visible',
+            }} aria-hidden="true">
+
+              {/* Section boxes */}
               {SECTIONS.map(sec => (
-                <div
-                  key={sec.id}
-                  className="absolute top-[3px] bottom-[3px] rounded-lg transition-all duration-300"
-                  style={{
-                    left: `${sec.left}%`,
-                    width: `${sec.width}%`,
-                    border: sec.id === activeSection
-                      ? '2px solid #1a1a1a'
-                      : '1px solid rgba(180,180,185,0.5)',
-                    background: sec.id === activeSection ? 'rgba(220,220,225,0.4)' : 'transparent',
-                  }}
-                />
+                <div key={sec.id} style={{
+                  position: 'absolute',
+                  top: '4px',
+                  bottom: '4px',
+                  left: `${sec.leftPct}%`,
+                  width: `${sec.widthPct}%`,
+                  borderRadius: '8px',
+                  border: sec.id === activeSection
+                    ? '2px solid #1a1a1a'
+                    : '1px solid rgba(185,185,192,0.5)',
+                  background: sec.id === activeSection
+                    ? 'rgba(230,230,235,0.5)'
+                    : 'transparent',
+                  transition: 'all 0.25s',
+                }} />
               ))}
 
-              {/* Seat dots */}
-              <div className="absolute inset-0 flex items-center px-2 gap-[2px]">
+              {/* Seat dot row */}
+              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', padding: '0 8px', gap: '2px' }}>
                 {Array.from({ length: 38 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="flex-1 rounded-full"
-                    style={{
-                      height: i < 8 ? '5px' : '3px',
-                      background: i < 8
-                        ? 'rgba(108,71,255,0.55)'
-                        : i < 16
-                        ? 'rgba(130,130,140,0.45)'
-                        : 'rgba(180,180,188,0.35)',
-                    }}
-                  />
+                  <div key={i} style={{
+                    flex: 1,
+                    height: i < 8 ? '5px' : '3px',
+                    borderRadius: '99px',
+                    background: i < 8
+                      ? 'rgba(108,71,255,0.5)'
+                      : i < 16
+                      ? 'rgba(130,130,140,0.4)'
+                      : 'rgba(185,185,195,0.4)',
+                  }} />
                 ))}
               </div>
             </div>
 
-            {/* Tail cap */}
-            <div
-              className="shrink-0 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
-              style={{
-                width: 'clamp(28px, 5vw, 42px)',
-                borderRadius: '0 35% 35% 0',
-                border: '1px solid rgba(200,200,205,0.7)',
-                borderLeft: 'none',
-              }}
-              aria-hidden="true"
-            />
+            {/* Tail */}
+            <div style={{
+              flexShrink: 0,
+              width: 'clamp(30px,5vw,46px)',
+              background: '#fff',
+              borderRadius: '0 35% 35% 0',
+              border: '1px solid rgba(210,210,215,0.8)',
+              borderLeft: 'none',
+              boxShadow: '-2px 0 8px rgba(0,0,0,0.04)',
+            }} aria-hidden="true" />
           </div>
 
           {/* Wings */}
-          <div
-            className="absolute pointer-events-none"
-            style={{ left: '24%', width: '23%', top: 0, height: '44px' }}
-            aria-hidden="true"
-          >
-            {/* Upper wing */}
-            <div
-              style={{
-                position: 'absolute',
-                width: '100%',
-                height: 'clamp(18px, 4vw, 28px)',
-                bottom: '100%',
-                marginBottom: '-3px',
-                background: 'rgba(255,255,255,0.8)',
-                border: '1px solid rgba(190,190,195,0.5)',
-                clipPath: 'polygon(18% 100%, 100% 100%, 62% 0%, 3% 0%)',
-              }}
-            />
-            {/* Lower wing */}
-            <div
-              style={{
-                position: 'absolute',
-                width: '100%',
-                height: 'clamp(18px, 4vw, 28px)',
-                top: '100%',
-                marginTop: '-3px',
-                background: 'rgba(255,255,255,0.8)',
-                border: '1px solid rgba(190,190,195,0.5)',
-                clipPath: 'polygon(3% 0%, 62% 100%, 100% 0%, 18% 0%)',
-              }}
-            />
+          <div style={{ position: 'absolute', top: 0, height: '48px', left: '25%', width: '22%', pointerEvents: 'none' }} aria-hidden="true">
+            <div style={{
+              position: 'absolute', width: '100%',
+              height: 'clamp(18px,4vw,26px)',
+              bottom: '100%', marginBottom: '-4px',
+              background: 'rgba(255,255,255,0.85)',
+              border: '1px solid rgba(200,200,205,0.6)',
+              clipPath: 'polygon(16% 100%,100% 100%,64% 0%,2% 0%)',
+            }} />
+            <div style={{
+              position: 'absolute', width: '100%',
+              height: 'clamp(18px,4vw,26px)',
+              top: '100%', marginTop: '-4px',
+              background: 'rgba(255,255,255,0.85)',
+              border: '1px solid rgba(200,200,205,0.6)',
+              clipPath: 'polygon(2% 0%,64% 100%,100% 0%,16% 0%)',
+            }} />
           </div>
 
         </div>

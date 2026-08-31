@@ -1,32 +1,31 @@
 import { X } from 'lucide-react';
 import type { Seat } from '../types';
 
-interface Props {
-  seats: Seat[];
-  onRemove: (seat: Seat) => void;
-}
+interface Props { seats: Seat[]; onRemove: (seat: Seat) => void; }
 
 export default function SelectedSeats({ seats, onRemove }: Props) {
   if (seats.length === 0) return null;
-
   return (
-    <div className="flex flex-wrap gap-2" role="list" aria-label="Selected seats">
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }} role="list" aria-label="Selected seats">
       {seats.map(seat => (
-        <div
-          key={seat.id}
-          role="listitem"
-          className="flex items-center gap-1.5 rounded-full pl-3 pr-1.5 py-1.5"
-          style={{ background: '#1a1a1a' }}
-        >
-          <span className="text-[11px] font-bold text-white tracking-wide">{seat.id}</span>
+        <div key={seat.id} role="listitem" style={{
+          display: 'flex', alignItems: 'center', gap: '6px',
+          background: '#1a1a1a', borderRadius: '999px',
+          paddingLeft: '12px', paddingRight: '6px', paddingTop: '6px', paddingBottom: '6px',
+        }}>
+          <span style={{ fontSize: '11px', fontWeight: 700, color: '#fff', letterSpacing: '0.03em' }}>{seat.id}</span>
           <button
             onClick={() => onRemove(seat)}
-            className="w-[14px] h-[14px] rounded-full flex items-center justify-center
-                       hover:bg-white/20 transition-colors"
-            style={{ background: 'rgba(255,255,255,0.15)' }}
             aria-label={`Remove seat ${seat.id}`}
+            style={{
+              width: '16px', height: '16px', borderRadius: '50%',
+              background: 'rgba(255,255,255,0.15)',
+              border: 'none', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              padding: 0,
+            }}
           >
-            <X size={8} strokeWidth={3} className="text-white" />
+            <X size={8} strokeWidth={3} color="#fff" />
           </button>
         </div>
       ))}

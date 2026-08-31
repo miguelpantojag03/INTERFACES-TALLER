@@ -1,8 +1,6 @@
 import { ArrowLeft } from 'lucide-react';
 
-interface HeaderProps {
-  onBack?: () => void;
-}
+interface HeaderProps { onBack?: () => void; }
 
 export default function Header({ onBack }: HeaderProps) {
   return (
@@ -10,28 +8,36 @@ export default function Header({ onBack }: HeaderProps) {
       {/* ── DESKTOP ── */}
       <div className="hidden lg:flex items-start justify-between mb-6">
         <div>
-          <h1 className="text-[2.5rem] font-black text-[#0a0a0a] tracking-tight leading-none">
+          <h1 style={{ fontSize: '2.35rem', fontWeight: 800, color: '#0a0a0a', lineHeight: 1, letterSpacing: '-0.5px', margin: 0 }}>
             Choose Seats
           </h1>
-          <p className="mt-2 text-[0.75rem] font-medium text-[#9ca3af] tracking-[0.05em] uppercase">
+          <p style={{ fontSize: '11px', fontWeight: 500, color: '#adb5bd', marginTop: '8px', letterSpacing: '0.02em' }}>
             BOG → MDE &nbsp;·&nbsp; A320NEO &nbsp;·&nbsp; 12 SEP
           </p>
         </div>
 
-        <div className="flex items-center gap-3 mt-1">
-          {/* Check-in pill */}
-          <div className="flex items-center gap-2 border border-[#e5e7eb] rounded-full px-3.5 py-[7px] bg-white shadow-sm">
-            <span className="w-[7px] h-[7px] rounded-full bg-green-400 shrink-0" aria-hidden="true" />
-            <span className="text-[11px] font-semibold text-[#374151] whitespace-nowrap">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '2px' }}>
+          {/* Check-in status — no visible pill background, just dot + text */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+            <span style={{
+              width: '7px', height: '7px', borderRadius: '50%',
+              background: '#4ade80', display: 'inline-block', flexShrink: 0
+            }} aria-hidden="true" />
+            <span style={{ fontSize: '11px', fontWeight: 600, color: '#374151', whiteSpace: 'nowrap' }}>
               Check-in abierto
             </span>
           </div>
 
-          {/* Avatar */}
+          {/* Avatar — tan bg, thick dark border */}
           <div
-            className="w-[38px] h-[38px] rounded-full bg-[#c8a87a] flex items-center justify-center
-                       text-[13px] font-bold text-[#3b1f00] select-none
-                       outline outline-[2.5px] outline-[#0a0a0a] outline-offset-0"
+            style={{
+              width: '38px', height: '38px', borderRadius: '50%',
+              background: '#c8a87a',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '13px', fontWeight: 700, color: '#3d2000',
+              outline: '3px solid #111', outlineOffset: '0px',
+              userSelect: 'none', flexShrink: 0,
+            }}
             aria-label="User JR"
           >
             JR
@@ -40,25 +46,22 @@ export default function Header({ onBack }: HeaderProps) {
       </div>
 
       {/* ── MOBILE ── */}
-      <div className="lg:hidden flex items-center justify-between px-4 pt-5 pb-3">
+      <div className="lg:hidden" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 16px 10px' }}>
         <button
           onClick={onBack}
-          className="w-9 h-9 rounded-full bg-white border border-gray-200 flex items-center
-                     justify-center shadow-sm active:scale-95 transition-transform touch-manipulation"
+          style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#fff', border: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}
           aria-label="Go back"
         >
-          <ArrowLeft size={15} className="text-gray-700" strokeWidth={2.5} />
+          <ArrowLeft size={15} color="#374151" strokeWidth={2.5} />
         </button>
 
-        <div className="text-center">
-          <h1 className="text-[15px] font-black text-[#0a0a0a] tracking-tight">Choose Seats</h1>
-          <p className="text-[11px] text-gray-400 font-medium mt-0.5">BOG → MDE · 12 SEP</p>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '15px', fontWeight: 800, color: '#0a0a0a', lineHeight: 1.2 }}>Choose Seats</div>
+          <div style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 500, marginTop: '2px' }}>BOG → MDE · 12 SEP</div>
         </div>
 
         <div
-          className="w-9 h-9 rounded-full bg-[#c8a87a] flex items-center justify-center
-                     text-[13px] font-bold text-[#3b1f00] select-none
-                     outline outline-2 outline-[#0a0a0a]"
+          style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#c8a87a', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 700, color: '#3d2000', outline: '2.5px solid #111', flexShrink: 0 }}
           aria-label="User JR"
         >
           JR
